@@ -1,12 +1,16 @@
 #!/bin/bash
 for i in `seq 1 5`;
 do
-  (  
+  (
     until $1; do
       echo "Server crashed with exit code $?.  Respawning.." >&2
+      if [ ! -z "$2" ]
+      then
+         echo "Process failed, trying to restart in 5 seconds." | mail -s "Process $1 failed" $2
+      fi
       sleep 1
     done
-  ) & 
+  ) &
 done
 
 cat
